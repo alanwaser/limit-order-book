@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+.venv/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+
+# Env / secrets
+.env
+
+# OS
+.DS_Store
+
+# Node (for Layer 4, later)
+node_modules/
+dist/
