@@ -21,4 +21,7 @@ class LimitOrderBook:
     def get_order_book(self, order_id):
         return self.order_lookup[order_id]
 
+    def get_bid(self, order_id):
+        return self.bids[order_id]
+
 
