@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from typing import Optional
 from sortedcontainers import SortedDict
 from lob.order import Order, Side, OrderType
 
@@ -8,20 +9,25 @@ class LimitOrderBook:
     def __init__(self):
         self.bids = SortedDict()
         self.asks = SortedDict()
-        self.order_lookup = {} # flat cancel lookup
+        self.order_lookup: dict[int,Order] = {} # flat cancel lookup
 
-    def get_bestBid(self):
-        maxBid = self.bids.peekitem(-1)
-        return maxBid
+    def get_best_bid(self) -> Optional[float]:
+        try:
+            # Ascending bids: the highest price is at the very end (-1)
+            price, _ = self.bids.peekitem(-1)
+            return price
+        except IndexError:
+            return None
 
-    def get_bestAsk(self):
-        maxAsk = self.asks.peekitem(-1)
-        return maxAsk
-    
-    def get_order_book(self, order_id):
-        return self.order_lookup[order_id]
+    def get_best_ask(self) -> Optional[float]:
+        try:
+            # Ascending asks: the lowest price is at the very beginning (0)
+            price, _ = self.asks.peekitem(0)
+            return price
+        except IndexError:
+            return None
 
-    def get_bid(self, order_id):
-        return self.bids[order_id]
-
+    def locate_order(self, order_id: int) -> Optional[Order]:
+        # Use .get() so cancelling a non-existent order doesn't crash with a KeyError
+        return self.order_lookup.get(order_id)
 
