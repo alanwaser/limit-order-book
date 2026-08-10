@@ -11,6 +11,20 @@ class LimitOrderBook:
         self.asks = SortedDict()
         self.order_lookup: dict[int,Order] = {} # flat cancel lookup
 
+    def add_limit_order(self, order: Order) -> None:
+        if order.order_id in self.order_lookup:
+            return ## this returns and stops dups from happening in the order book
+
+        book = self.bids if order.side == Side.BUY else self.asks
+
+        if order.price not in book:
+            book[order.price] = OrderedDict()
+
+        book[order.price][order.order_id] = order
+
+        self.order_lookup[order.order_id] = order## update flat dictioanary
+
+
     def get_best_bid(self) -> Optional[float]:
         try:
             # Ascending bids: the highest price is at the very end (-1)
