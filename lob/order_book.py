@@ -41,6 +41,16 @@ class LimitOrderBook:
         except IndexError:
             return None
 
+    def get_spread(self) -> Optional[float]:
+        bestBid = self.get_best_bid()
+        bestAsk = self.get_best_ask()
+
+        if bestBid is None or bestAsk is None:
+            return None
+
+        return bestBid - bestAsk
+
+
     def locate_order(self, order_id: int) -> Optional[Order]:
         # Use .get() so cancelling a non-existent order doesn't crash with a KeyError
         return self.order_lookup.get(order_id)
