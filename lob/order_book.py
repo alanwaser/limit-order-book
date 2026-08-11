@@ -42,14 +42,13 @@ class LimitOrderBook:
             return None
 
     def get_spread(self) -> Optional[float]:
-        bestBid = self.get_best_bid()
-        bestAsk = self.get_best_ask()
+        best_bid = self.get_best_bid()
+        best_ask = self.get_best_ask()
 
-        if bestBid is None or bestAsk is None:
+        if best_bid is None or best_ask is None:
             return None
 
-        return bestBid - bestAsk
-
+        return best_ask - best_bid
 
     def locate_order(self, order_id: int) -> Optional[Order]:
         # Use .get() so cancelling a non-existent order doesn't crash with a KeyError
