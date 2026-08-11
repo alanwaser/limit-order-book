@@ -12,8 +12,11 @@ class LimitOrderBook:
         self.order_lookup: dict[int,Order] = {} # flat cancel lookup
 
     def add_limit_order(self, order: Order) -> None:
+
         if order.order_id in self.order_lookup:
             return ## this returns and stops dups from happening in the order book
+
+        
 
         book = self.bids if order.side == Side.BUY else self.asks
 
