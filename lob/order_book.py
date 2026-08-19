@@ -2,6 +2,7 @@ from collections import OrderedDict
 from typing import Optional
 from sortedcontainers import SortedDict
 from lob.order import Order, Side, OrderType
+from lob.trade import Trade
 
 
 class LimitOrderBook:
@@ -16,16 +17,38 @@ class LimitOrderBook:
         if order.order_id in self.order_lookup:
             return ## this returns and stops dups from happening in the order book
 
-        
-
-        book = self.bids if order.side == Side.BUY else self.asks
+        book = self.bids if order.side == Side.BID else self.asks ## picks buy or sell side
 
         if order.price not in book:
-            book[order.price] = OrderedDict()
+            book[order.price] = OrderedDict() ##if there is no price level exist, adds ordered dict
 
-        book[order.price][order.order_id] = order
+        book[order.price][order.order_id] = order ## adds order to price level
 
-        self.order_lookup[order.order_id] = order## update flat dictioanary
+        self.order_lookup[order.order_id] = order## update flat dictioanary for 0(1)
+
+    def _match(self, order: Order) -> list[Trade]:
+        trades: list[Trade] = []
+
+        match_book = self.asks if order.side == Side.BID else self.bids
+
+        while order.remaining_quantity > 0 and len(match_book) > 0:
+
+            if order.side == Side.BID:
+                best_price, price_level = match_book.peekitem(0)
+                if order.price < best_price:
+                    break
+            else:
+                best_price, price_level = match_book.peekitem(-1)
+                if order.price < best_price:
+                    break
+
+
+
+
+
+
+
+
 
 
     def get_best_bid(self) -> Optional[float]:
