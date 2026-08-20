@@ -39,17 +39,9 @@ class LimitOrderBook:
                     break
             else:
                 best_price, price_level = match_book.peekitem(-1)
-                if order.price < best_price:
+                if order.price > best_price:
                     break
-
-
-
-
-
-
-
-
-
+            resting_idx = len(match_book)
 
     def get_best_bid(self) -> Optional[float]:
         try:
